@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.post("/signup", async(req, res) => {
    const user = new User(req.body);
-   console.log(user);
+   
 try {
    await user.save();
    res.send("user added successfully");
@@ -52,6 +52,35 @@ app.get("/feed", async(req,res) => {
    }
 });
 
+
+// Delete a user
+
+app.delete("/user", async(req,res) =>{
+   const userId = req.body.userId;
+
+   try{
+      const user =  await User.findOneAndDelete({ _id: userId });
+      console.log(user);
+      res.send("User Deleted Successfully");
+      
+   }catch(err){
+      res.status(400).send("Something went wrong");
+   }
+})
+
+// update the user
+
+app.patch("/user", async(req,res) =>{
+   const userId = req.body.userId;
+   const data = req.body;
+
+   try{
+      const user = await User.findByIdAndUpdate(userId,data);
+      res.send("user data updated successfully");
+   } catch(err){
+      res.status(400).send("User not found");
+   }
+})
 
 connectDB()
     .then(() => {
