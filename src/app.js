@@ -16,6 +16,7 @@ try {
    res.send("user added successfully");
 } catch (err) {
    res.send("Error in adding user!!",err);
+   console.log(err);
 }
 });
 
@@ -75,10 +76,12 @@ app.patch("/user", async(req,res) =>{
    const data = req.body;
 
    try{
-      const user = await User.findByIdAndUpdate(userId,data);
+      const user = await User.findByIdAndUpdate(userId,data,{
+         runValidators : true
+      });
       res.send("user data updated successfully");
    } catch(err){
-      res.status(400).send("User not found");
+      res.status(400).send("User not found"+ err.message);
    }
 })
 
